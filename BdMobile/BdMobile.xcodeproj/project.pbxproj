@@ -19,7 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		08447CA622157DA30008A1EA /* Checklists.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Checklists.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		08447CA622157DA30008A1EA /* BdMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BdMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08447CA922157DA30008A1EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		08447CAB22157DA30008A1EA /* ChecklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistViewController.swift; sourceTree = "<group>"; };
 		08447CAE22157DA30008A1EA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -46,7 +46,7 @@
 		08447C9D22157DA30008A1EA = {
 			isa = PBXGroup;
 			children = (
-				08447CA822157DA30008A1EA /* Checklists */,
+				08447CA822157DA30008A1EA /* BdMobile */,
 				08447CA722157DA30008A1EA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,12 +54,12 @@
 		08447CA722157DA30008A1EA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				08447CA622157DA30008A1EA /* Checklists.app */,
+				08447CA622157DA30008A1EA /* BdMobile.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		08447CA822157DA30008A1EA /* Checklists */ = {
+		08447CA822157DA30008A1EA /* BdMobile */ = {
 			isa = PBXGroup;
 			children = (
 				08447CBD2215A07E0008A1EA /* Controllers */,
@@ -70,7 +70,7 @@
 				08447CB522157DA40008A1EA /* Info.plist */,
 				086AFABD221EDDD8009864C6 /* SegueHandlerType.swift */,
 			);
-			path = Checklists;
+			path = BdMobile;
 			sourceTree = "<group>";
 		};
 		08447CBB2215A05B0008A1EA /* Views */ = {
@@ -103,9 +103,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		08447CA522157DA30008A1EA /* Checklists */ = {
+		08447CA522157DA30008A1EA /* BdMobile */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 08447CB822157DA40008A1EA /* Build configuration list for PBXNativeTarget "Checklists" */;
+			buildConfigurationList = 08447CB822157DA40008A1EA /* Build configuration list for PBXNativeTarget "BdMobile" */;
 			buildPhases = (
 				08447CA222157DA30008A1EA /* Sources */,
 				08447CA322157DA30008A1EA /* Frameworks */,
@@ -115,9 +115,9 @@
 			);
 			dependencies = (
 			);
-			name = Checklists;
+			name = BdMobile;
 			productName = Checklists;
-			productReference = 08447CA622157DA30008A1EA /* Checklists.app */;
+			productReference = 08447CA622157DA30008A1EA /* BdMobile.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -135,7 +135,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 08447CA122157DA30008A1EA /* Build configuration list for PBXProject "Checklists" */;
+			buildConfigurationList = 08447CA122157DA30008A1EA /* Build configuration list for PBXProject "BdMobile" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -148,7 +148,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				08447CA522157DA30008A1EA /* Checklists */,
+				08447CA522157DA30008A1EA /* BdMobile */,
 			);
 		};
 /* End PBXProject section */
@@ -324,7 +324,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7X399PPS2V;
-				INFOPLIST_FILE = Checklists/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/BdMobile/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -342,7 +342,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7X399PPS2V;
-				INFOPLIST_FILE = Checklists/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/BdMobile/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -357,7 +357,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		08447CA122157DA30008A1EA /* Build configuration list for PBXProject "Checklists" */ = {
+		08447CA122157DA30008A1EA /* Build configuration list for PBXProject "BdMobile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08447CB622157DA40008A1EA /* Debug */,
@@ -366,7 +366,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		08447CB822157DA40008A1EA /* Build configuration list for PBXNativeTarget "Checklists" */ = {
+		08447CB822157DA40008A1EA /* Build configuration list for PBXNativeTarget "BdMobile" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				08447CB922157DA40008A1EA /* Debug */,

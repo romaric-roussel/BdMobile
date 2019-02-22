@@ -11,6 +11,9 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var tableView: UITableView!
+    
+    var listElement = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,18 +33,22 @@ class ViewController: UIViewController {
         
     }
 
-
+    @IBAction func insertRow(_ sender: Any) {
+        listElement.append("element : \(listElement.count + 1)")
+        tableView.reloadData()
+    }
+    
 }
 
 extension ViewController : UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellIdentifier")!
-        cell.textLabel?.text = "Row \(indexPath.row)"
+        cell.textLabel?.text = listElement[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return listElement.count
     }
 }
 

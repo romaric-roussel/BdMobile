@@ -25,7 +25,11 @@
                                 </constraints>
                                 <items>
                                     <navigationItem title="List" id="lO8-Ub-a5X">
-                                        <barButtonItem key="rightBarButtonItem" title="Add" id="xBg-Dz-NHv"/>
+                                        <barButtonItem key="rightBarButtonItem" title="Add" id="xBg-Dz-NHv">
+                                            <connections>
+                                                <action selector="insertRow:" destination="BYZ-38-t0r" id="tYM-cB-ZXV"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -62,6 +66,7 @@
                     </view>
                     <connections>
                         <outlet property="navigationBar" destination="MHq-vT-MKx" id="rJQ-Gy-pgs"/>
+                        <outlet property="tableView" destination="pPa-C1-Qga" id="Ym7-ZP-0Nb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

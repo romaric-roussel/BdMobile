@@ -13,6 +13,7 @@
 		0828B021221FF03E00E4BE6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0828B020221FF03E00E4BE6E /* Assets.xcassets */; };
 		0828B024221FF03E00E4BE6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0828B022221FF03E00E4BE6E /* LaunchScreen.storyboard */; };
 		0828B02E2220274B00E4BE6E /* ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828B02D2220274B00E4BE6E /* ListItem.swift */; };
+		0828B0322220370500E4BE6E /* CheckListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0828B0312220370500E4BE6E /* CheckListItemCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0828B023221FF03E00E4BE6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0828B025221FF03E00E4BE6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0828B02D2220274B00E4BE6E /* ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItem.swift; sourceTree = "<group>"; };
+		0828B0312220370500E4BE6E /* CheckListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckListItemCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				0828B022221FF03E00E4BE6E /* LaunchScreen.storyboard */,
 				0828B025221FF03E00E4BE6E /* Info.plist */,
 				0828B02D2220274B00E4BE6E /* ListItem.swift */,
+				0828B0312220370500E4BE6E /* CheckListItemCell.swift */,
 			);
 			path = BdMobile;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 				0828B02E2220274B00E4BE6E /* ListItem.swift in Sources */,
 				0828B01C221FF03C00E4BE6E /* ViewController.swift in Sources */,
 				0828B01A221FF03C00E4BE6E /* AppDelegate.swift in Sources */,
+				0828B0322220370500E4BE6E /* CheckListItemCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

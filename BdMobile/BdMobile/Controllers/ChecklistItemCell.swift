@@ -10,8 +10,8 @@ import UIKit
 
 class ChecklistItemCell: UITableViewCell {
 
-    @IBOutlet weak var lbLChecked: UILabel!
-    @IBOutlet weak var lbLibelle: UILabel!
+    @IBOutlet weak var lbChecked: UILabel!
+    @IBOutlet weak var lblibelle: UILabel!
     
     
 }

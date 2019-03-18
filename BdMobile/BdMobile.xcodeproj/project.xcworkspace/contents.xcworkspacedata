@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/lpiem/Documents/Cours/ios/BdMobile/Checklists/BdMobile.xcodeproj">
+      location = "group:/Users/lpiem/Documents/Cours/ios/BdMobile/BdMobile/BdMobile/Models/Checklist.swift">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ChecklistItem {
+class ChecklistItem : Codable {
     var text: String
     var checked: Bool
     
@@ -22,6 +22,7 @@ class ChecklistItem {
         self.checked = !self.checked
     }
 }
+
 
 
 

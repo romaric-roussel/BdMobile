@@ -8,22 +8,24 @@
 
 import UIKit
 
-class AddItemViewController: UITableViewController,UITextFieldDelegate {
+class ItemDetailViewController: UITableViewController,UITextFieldDelegate {
     
     @IBOutlet weak var itemText: UITextField!
     @IBOutlet weak var btnCancel: UIBarButtonItem!
     @IBOutlet weak var btnDone: UIBarButtonItem!
     
     
-    var delegate : AddItemViewControllerDelegate?
-    var itemToEdit :ChecklistItemCell?
+    var delegate : itemDetailViewControllerDelegate?
+    var itemToEdit :ChecklistItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if(itemToEdit == nil){
-                //ajout
-        }else{
+        if(itemToEdit != nil){
             //modif
+            self.title = "Edit item"
+            itemText.text = itemToEdit?.text        
+        } else {
+            btnDone.isEnabled = false
         }
       
         // Do any additional setup after loading the view, typically from a nib.
@@ -31,16 +33,25 @@ class AddItemViewController: UITableViewController,UITextFieldDelegate {
     }
     
     
+
+    
+    
     @IBAction func cancel() {
         //dismiss(animated: true, completion: nil)
-        delegate?.addItemViewControllerDidCancel(self)
+        delegate?.itemDetailViewControllerDidCancel(self)
         
     }
     
     @IBAction func done() {
         //print(itemText.text!)
         //dismiss(animated: true, completion: nil)
-        delegate?.addItemViewController(self, didFinishAddingItem: ChecklistItem(text: itemText.text!))
+        if(itemToEdit != nil){
+            itemToEdit?.text = itemText.text!
+            delegate?.itemDetailViewController(self, didFinishEditingItem: itemToEdit!)
+        }else {
+            delegate?.itemDetailViewController(self, didFinishAddingItem: ChecklistItem(text: itemText.text!))
+
+        }
   
     }
     
@@ -58,12 +69,10 @@ class AddItemViewController: UITableViewController,UITextFieldDelegate {
         if let oldString = textField.text {
             let newString = oldString.replacingCharacters(in: Range(range, in: oldString)!,
                                                           with: string)
-            
-            if((newString.isEmpty)){
-                btnDone.isEnabled = false
-                
-            }else {
+            if(!newString.isEmpty){
                 btnDone.isEnabled = true
+            } else {
+                btnDone.isEnabled = false
             }
             
         }
@@ -73,9 +82,10 @@ class AddItemViewController: UITableViewController,UITextFieldDelegate {
         
     
 }
-protocol AddItemViewControllerDelegate  {
-    func addItemViewControllerDidCancel(_ controller: AddItemViewController)
-    func addItemViewController(_ controller: AddItemViewController, didFinishAddingItem item: ChecklistItem)
+protocol itemDetailViewControllerDelegate  {
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: ChecklistItem)
+    func itemDetailViewController(_ controller:ItemDetailViewController,didFinishEditingItem item:ChecklistItem)
 }
 
 

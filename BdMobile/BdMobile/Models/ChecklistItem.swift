@@ -6,9 +6,9 @@
 //  Copyright © 2019 lpiem. All rights reserved.
 //
 
-import Foundation
+//import Foundation
 
-class ChecklistItem : Codable {
+/*class ChecklistItem : Codable {
     var text: String
     var checked: Bool
     
@@ -21,7 +21,7 @@ class ChecklistItem : Codable {
     func toggleChecked(){
         self.checked = !self.checked
     }
-}
+}*/
 
 
 

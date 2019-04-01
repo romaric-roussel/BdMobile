@@ -6,7 +6,7 @@
 //  Copyright © 2019 lpiem. All rights reserved.
 //
 
-import Foundation
+/*import Foundation
 
 class Checklist : Codable {
     var name: String
@@ -19,5 +19,5 @@ class Checklist : Codable {
     }
     
 
-}
+}*/
 

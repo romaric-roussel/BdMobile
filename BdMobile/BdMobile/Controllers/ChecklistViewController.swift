@@ -105,9 +105,9 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if isFiltering(){
-            filteredArray[indexPath.item].toggleChecked()
+            filteredArray[indexPath.item].checked = !filteredArray[indexPath.item].checked
         }
-        checklistArray[indexPath.item].toggleChecked()
+        checklistArray[indexPath.item].checked = !filteredArray[indexPath.item].checked
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
@@ -155,17 +155,17 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     
     func saveChecklistItems() {
         
-        let encoder = JSONEncoder()
+       /* let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         do {
             try encoder.encode(checklistArray).write(to: dataFileUrl)
         } catch {
             print("error")
-        }
+        }*/
     }
     
     func loadChecklistItems() {
-        do {
+       /* do {
             // Decode data to object
             let jsonDecoder = JSONDecoder()
             let data : Data = try Data(contentsOf: dataFileUrl)
@@ -173,7 +173,7 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
         }
         catch {
             print(error)
-        }
+        }*/
         
     }
      func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -192,7 +192,7 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     
     func filter(searchText : String) {
         filteredArray = checklistArray.filter({( item : ChecklistItem) -> Bool in
-            return item.text.lowercased().contains(searchText.lowercased())})
+            return item.text!.lowercased().contains(searchText.lowercased())})
         
         tableView.reloadData()
     }

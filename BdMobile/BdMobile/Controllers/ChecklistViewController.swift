@@ -178,7 +178,13 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     }
      func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            checklistArray.remove(at: indexPath.row)
+            print(indexPath)
+            
+            let indexOfItemToRemove = checklistArray.index(where: { (item) -> Bool in
+                item.text == filteredArray[indexPath.row].text // test if this is the item you're looking for
+            })
+            filteredArray.remove(at: indexPath.row)
+            checklistArray.remove(at: indexOfItemToRemove!)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             saveChecklistItems()
         }

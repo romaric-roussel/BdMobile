@@ -7,24 +7,32 @@
 //
 
 import UIKit
+import CoreData
 
 class AllListViewController: UITableViewController {
     
-    var lists  = [Checklist]()
-    var checklist = [ChecklistItem]()
+    /*var lists  = [Checklist]()
+    var checklist = [ChecklistItem]()*/
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checklist.append(ChecklistItem(text: "mhw"))
-        checklist.append(ChecklistItem(text: "react",checked: true))
-        lists.append(Checklist(name: "liste 1"))
-        lists.append(Checklist(name: "liste 2",items: checklist))
+        
+        //checklist.append(ChecklistItem(text: "mhw"))
+        //checklist.append(ChecklistItem(text: "react",checked: true))
+        
+        //lists.append(Checklist(name: "liste 1"))
+        //lists.append(Checklist(name: "liste 2",items: checklist))
 
-        print(lists[0].name)
-        print(lists[0].items.count)
+        //print(lists[0].name)
+        //print(lists[0].items.count)
 
         
+    }
+    
+    override func awakeFromNib() {
+        //loadChecklistItems()
+        DataModel.sharedInstance.loadChecklist()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -34,7 +42,8 @@ class AllListViewController: UITableViewController {
             let delegate = segue.destination as! ChecklistViewController
             let cell = sender as? UITableViewCell
             let indexForSelectedItem = tableView.indexPath(for: cell!)
-            delegate.list = lists[indexForSelectedItem!.row]
+            //delegate.list = lists[indexForSelectedItem!.row]
+            delegate.list = DataModel.sharedInstance.lists[indexForSelectedItem!.row]
             break
         
         }
@@ -42,12 +51,17 @@ class AllListViewController: UITableViewController {
     
     //datasource
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lists.count    }
+        //return lists.count
+        return DataModel.sharedInstance.lists.count
+    }
     
     //delegate
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "checkList", for: indexPath)
-        cell.textLabel?.text = lists[indexPath.row].name
+        //cell.textLabel?.text = lists[indexPath.row].name
+        cell.textLabel?.text = DataModel.sharedInstance.lists[indexPath.row].name
+
+
         return cell
         
     }

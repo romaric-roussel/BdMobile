@@ -8,14 +8,17 @@
 
 import UIKit
 
-class ChecklistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ChecklistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate {
     
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     
+    var searchBarText = ""
     var checklistArray = [ChecklistItem]()
     var list: Checklist!
+    var filteredArray = [ChecklistItem]()
     var documentDirectory: URL {
         get {
             return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -36,6 +39,7 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = list.name
+        searchBar.delegate = self
         
     }
     
@@ -58,7 +62,12 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
             controller.delegate = self
             let cell = sender as? ChecklistItemCell
             let indexForSelectedItem = tableView.indexPath(for: cell!)
-            controller.itemToEdit = checklistArray[indexForSelectedItem!.row]
+            if isFiltering() {
+                controller.itemToEdit = filteredArray[indexForSelectedItem!.row]
+            }else {
+                controller.itemToEdit = checklistArray[indexForSelectedItem!.row]
+            }
+            
             break
             
         }
@@ -67,14 +76,26 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     
     //datasource
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFiltering() {
+            return filteredArray.count
+        }
         return checklistArray.count    }
     
     //delegate
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath)
-    
-        configureCheckmark(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
-        configureText(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
+        
+        if isFiltering() {
+            configureCheckmark(for: cell as! ChecklistItemCell, withItem: filteredArray[indexPath.item])
+            configureText(for: cell as! ChecklistItemCell, withItem: filteredArray[indexPath.item])
+        } else {
+            configureCheckmark(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
+            configureText(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
+        }
+        
+        
+       /* configureCheckmark(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
+        configureText(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])*/
         
         return cell
 
@@ -83,7 +104,10 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     //deledgte too
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        checklistArray[indexPath.item].toggleChecked()
+        if isFiltering(){
+            filteredArray[indexPath.item].checked = !filteredArray[indexPath.item].checked
+        }
+        checklistArray[indexPath.item].checked = !filteredArray[indexPath.item].checked
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
@@ -105,29 +129,43 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     
     func addDummyTodo(item : ChecklistItem) {
         checklistArray.append(item)
-        tableView.insertRows(at: [IndexPath(row: checklistArray.count - 1, section: 0)], with:.automatic)
+        if(!isFiltering()){
+            tableView.insertRows(at: [IndexPath(row: checklistArray.count - 1, section: 0)], with:.automatic)
+        }else{
+            filter(searchText: searchBarText)
+        }
         saveChecklistItems()
         
     }
     func updateDummyTodo(item : ChecklistItem,index :Int) {
-        checklistArray[index].text = item.text
-        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        
+         if(!isFiltering()){
+            checklistArray[index].text = item.text
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+         }else {
+            filter(searchText: searchBarText)
+         }
+        /* }else {
+            filteredArray[index].text = item.text
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }*/
+        
         saveChecklistItems()
     }
     
     func saveChecklistItems() {
         
-        let encoder = JSONEncoder()
+       /* let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         do {
             try encoder.encode(checklistArray).write(to: dataFileUrl)
         } catch {
             print("error")
-        }
+        }*/
     }
     
     func loadChecklistItems() {
-        do {
+       /* do {
             // Decode data to object
             let jsonDecoder = JSONDecoder()
             let data : Data = try Data(contentsOf: dataFileUrl)
@@ -135,15 +173,39 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
         }
         catch {
             print(error)
-        }
+        }*/
         
     }
      func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            checklistArray.remove(at: indexPath.row)
+            print(indexPath)
+            
+            let indexOfItemToRemove = checklistArray.index(where: { (item) -> Bool in
+                item.text == filteredArray[indexPath.row].text // test if this is the item you're looking for
+            })
+            filteredArray.remove(at: indexPath.row)
+            checklistArray.remove(at: indexOfItemToRemove!)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             saveChecklistItems()
         }
+    }
+    
+    func filter(searchText : String) {
+        filteredArray = checklistArray.filter({( item : ChecklistItem) -> Bool in
+            return item.text!.lowercased().contains(searchText.lowercased())})
+        
+        tableView.reloadData()
+    }
+    
+    
+     func searchBar(_ searchBar: UISearchBar,
+                   textDidChange searchText: String){
+        searchBarText = searchBar.text!
+        filter(searchText: searchText)
+    }
+        
+    func isFiltering() -> Bool {
+        return (searchBar.text?.count)! > 0 ? true : false
     }
 }
 
@@ -160,10 +222,13 @@ extension ChecklistViewController : itemDetailViewControllerDelegate{
     
     func itemDetailViewController(_ controller:ItemDetailViewController,didFinishEditingItem item:ChecklistItem) {
         controller.dismiss(animated: true, completion: nil)
-        let index = checklistArray.index(where : {
-            $0 === item
-        })
-        updateDummyTodo(item: item, index: index!)
+     
+            let index = checklistArray.index(where : {
+                $0 === item
+            })
+            updateDummyTodo(item: item, index: index!)
+        
+        
     }
     
     
@@ -177,6 +242,8 @@ extension ChecklistViewController: SegueHandlerType {
         
     }
 }
+
+
     
 
 

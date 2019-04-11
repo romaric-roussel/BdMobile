@@ -22,18 +22,57 @@ class DataModel {
             selector: #selector(saveChecklist),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil)
+    
         
-        let entity = NSEntityDescription.entity(forEntityName: "Checklist", in: managedContext)
+        /*let entity = NSEntityDescription.entity(forEntityName: "Checklist", in: managedContext)
         let checklistBase = NSManagedObject(entity: entity!, insertInto: managedContext)
-        checklistBase.setValue("lists 4", forKey: "name")
+        checklistBase.setValue("lists 10", forKey: "name")*/
         //checklistBase.setValue("lists 3", forKey: "name")
-        let checklistBase2 = Checklist(context: managedContext)
-        checklistBase2.name = "list 5"
+        //let checklistBase2 = Checklist(context: managedContext)
+        //checklistBase2.name = "list 6"
     }
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     lazy var managedContext = {
         appDelegate.persistentContainer.viewContext
     }()
+    
+    
+    func insertNewList(name:String) -> Void {
+        let entity = NSEntityDescription.entity(forEntityName: "Checklist", in: managedContext)
+         let checklistBase = NSManagedObject(entity: entity!, insertInto: managedContext)
+         let id = NSUUID().uuidString
+         checklistBase.setValue(name, forKey: "name")
+         checklistBase.setValue(id, forKey: "id")
+         saveChecklist()
+    }
+    
+    func insertNewTodo(text:String,checked:Bool,checkList:Checklist) -> Void {
+       /* let entity = NSEntityDescription.entity(forEntityName: "ChecklistItem", in: managedContext)
+        let checklistItemBase = NSManagedObject(entity: entity!, insertInto: managedContext)*/
+        let id = NSUUID().uuidString
+        let newTodo = ChecklistItem(context: managedContext)
+        newTodo.text = text
+        newTodo.checked = checked
+        newTodo.id = id
+        newTodo.checkList = checkList
+        saveChecklist()
+        //loadChecklistItems()
+    }
+    
+    func deleteList(id:String) -> Void {
+        /*let entity = NSEntityDescription.entity(forEntityName: "Checklist", in: managedContext)*/
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Checklist")
+        fetchedRequest.predicate = NSPredicate(format: "id = %@", id)
+        do {
+            let context = try managedContext.fetch(fetchedRequest)
+            let objectToDelete = context[0] as! NSManagedObject
+            managedContext.delete(objectToDelete)
+            saveChecklist()
+        } catch let error as NSError {
+            print("Could not save the database : \(error)")
+        }
+    }
+    
    
     
     
@@ -63,6 +102,7 @@ class DataModel {
             let fetchedResults = try managedContext.fetch(fetchRequest)
             let results =  fetchedResults as [NSManagedObject]
             lists = results as! [Checklist]
+            
         }catch let error as NSError{print("Could not fetch : \(error)")}
         /*do {
             // Decode data to object
@@ -76,7 +116,26 @@ class DataModel {
         
     }
     
-   /* func sortChecklists() {
+    func loadChecklistItems(checkList: Checklist) {
+        
+        let fetchedRequestChecklist: NSFetchRequest<ChecklistItem> = ChecklistItem.fetchRequest()
+        
+        //let fetchRequestCheckListItem: NSFetchRequest<ChecklistItem> = NSFetchRequest<ChecklistItem>(entityName: "ChecklistItem")
+        fetchedRequestChecklist.predicate = NSPredicate(format: "checkList = %@", checkList)
+        
+        do {
+            _ = try managedContext.fetch(fetchedRequestChecklist)
+            //let object = results.first
+            checklist = checkList.checklistItems?.allObjects as! [ChecklistItem]
+            
+
+            
+            
+        }catch let error as NSError{print("Could not fetch : \(error)")}
+        
+    }
+    
+    /*func sortChecklists() {
         lists.sort {
             $0.name.localizedCompare($1.name) == .orderedAscending
         }

@@ -17,6 +17,7 @@ class ItemDetailViewController: UITableViewController,UITextFieldDelegate {
     
     var delegate : itemDetailViewControllerDelegate?
     var itemToEdit :ChecklistItem?
+    var checklist : Checklist?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +50,7 @@ class ItemDetailViewController: UITableViewController,UITextFieldDelegate {
             itemToEdit?.text = itemText.text!
             delegate?.itemDetailViewController(self, didFinishEditingItem: itemToEdit!)
         }else {
-            //delegate?.itemDetailViewController(self, didFinishAddingItem: ChecklistItem(text: itemText.text!))
+            delegate?.itemDetailViewController(self, didFinishAddingItem: itemText.text!, checklist!)
 
         }
   
@@ -84,7 +85,7 @@ class ItemDetailViewController: UITableViewController,UITextFieldDelegate {
 }
 protocol itemDetailViewControllerDelegate  {
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController)
-    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: ChecklistItem)
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: String,_ list: Checklist)
     func itemDetailViewController(_ controller:ItemDetailViewController,didFinishEditingItem item:ChecklistItem)
 }
 

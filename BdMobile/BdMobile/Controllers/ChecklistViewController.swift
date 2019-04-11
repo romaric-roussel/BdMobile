@@ -16,10 +16,11 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     
     
     var searchBarText = ""
-    var checklistArray = [ChecklistItem]()
+    //var checklistArray = [ChecklistItem]()
     var list: Checklist!
+    var posList : Int?
     var filteredArray = [ChecklistItem]()
-    var documentDirectory: URL {
+    /*var documentDirectory: URL {
         get {
             return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         }
@@ -32,7 +33,7 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
             path = documentDirectory.appendingPathComponent(file).appendingPathExtension(ext)
             return path
         }
-    }
+    }*/
     //var itemToEdit
     
 
@@ -40,11 +41,13 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewDidLoad()
         self.title = list.name
         searchBar.delegate = self
+        DataModel.sharedInstance.loadChecklistItems(checkList: list)
         
     }
     
     override func awakeFromNib() {
-        loadChecklistItems()
+        //DataModel.sharedInstance.loadChecklistItems(checkList: list)
+    
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -55,6 +58,8 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
             let controller = navigation.topViewController as! ItemDetailViewController
             controller.delegate = self
             controller.itemToEdit = nil
+            controller.checklist = list
+
             break
         case .editItem:
             let navigation = segue.destination as! UINavigationController
@@ -65,7 +70,7 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
             if isFiltering() {
                 controller.itemToEdit = filteredArray[indexForSelectedItem!.row]
             }else {
-                controller.itemToEdit = checklistArray[indexForSelectedItem!.row]
+                controller.itemToEdit = DataModel.sharedInstance.checklist[indexForSelectedItem!.row]
             }
             
             break
@@ -79,7 +84,8 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
         if isFiltering() {
             return filteredArray.count
         }
-        return checklistArray.count    }
+        //print("dat count = \(DataModel.sharedInstance.checklist.count)")
+        return DataModel.sharedInstance.checklist.count    }
     
     //delegate
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
@@ -89,8 +95,8 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
             configureCheckmark(for: cell as! ChecklistItemCell, withItem: filteredArray[indexPath.item])
             configureText(for: cell as! ChecklistItemCell, withItem: filteredArray[indexPath.item])
         } else {
-            configureCheckmark(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
-            configureText(for: cell as! ChecklistItemCell, withItem: checklistArray[indexPath.item])
+            configureCheckmark(for: cell as! ChecklistItemCell, withItem: DataModel.sharedInstance.checklist[indexPath.item])
+            configureText(for: cell as! ChecklistItemCell, withItem: DataModel.sharedInstance.checklist[indexPath.item])
         }
         
         
@@ -107,14 +113,15 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
         if isFiltering(){
             filteredArray[indexPath.item].checked = !filteredArray[indexPath.item].checked
         }
-        checklistArray[indexPath.item].checked = !filteredArray[indexPath.item].checked
+        //print("id filter \(filteredArray[indexPath.item])")
+        DataModel.sharedInstance.checklist[indexPath.item].checked = !filteredArray[indexPath.item].checked
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
     func configureCheckmark(for cell: ChecklistItemCell, withItem item: ChecklistItem){
         
         cell.lbChecked.isHidden = !item.checked
-        saveChecklistItems()
+        //saveChecklistItems()
 
         //cell.accessoryType = item.checked ? .checkmark : .none
         
@@ -122,25 +129,30 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
     func configureText(for cell: ChecklistItemCell, withItem item: ChecklistItem){
             //cell.textLabel?.text = item.text
         cell.lblibelle.text = item.text
-        saveChecklistItems()
+        //saveChecklistItems()
 
     }
     
     
-    func addDummyTodo(item : ChecklistItem) {
-        checklistArray.append(item)
+    func addDummyTodo(text : String) {
+        //checklistArray.append(item)
+        print(list)
+        DataModel.sharedInstance.insertNewTodo(text: text, checked: false,checkList: list)
+        //DataModel.sharedInstance.checklist[posList].addToChecklist(list)
+        DataModel.sharedInstance.loadChecklistItems(checkList: list)
         if(!isFiltering()){
-            tableView.insertRows(at: [IndexPath(row: checklistArray.count - 1, section: 0)], with:.automatic)
+            tableView.insertRows(at: [IndexPath(row: DataModel.sharedInstance.checklist.count - 1, section: 0)], with:.automatic)
         }else{
             filter(searchText: searchBarText)
         }
-        saveChecklistItems()
+        //saveChecklistItems()
+        
         
     }
     func updateDummyTodo(item : ChecklistItem,index :Int) {
         
          if(!isFiltering()){
-            checklistArray[index].text = item.text
+            DataModel.sharedInstance.checklist[index].text = item.text
             tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
          }else {
             filter(searchText: searchBarText)
@@ -150,7 +162,7 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
             tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         }*/
         
-        saveChecklistItems()
+        //saveChecklistItems()
     }
     
     func saveChecklistItems() {
@@ -164,34 +176,23 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
         }*/
     }
     
-    func loadChecklistItems() {
-       /* do {
-            // Decode data to object
-            let jsonDecoder = JSONDecoder()
-            let data : Data = try Data(contentsOf: dataFileUrl)
-            checklistArray =  try jsonDecoder.decode([ChecklistItem].self, from: data)
-        }
-        catch {
-            print(error)
-        }*/
-        
-    }
+
      func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             print(indexPath)
             
-            let indexOfItemToRemove = checklistArray.index(where: { (item) -> Bool in
+            /*let indexOfItemToRemove = checklistArray.index(where: { (item) -> Bool in
                 item.text == filteredArray[indexPath.row].text // test if this is the item you're looking for
             })
             filteredArray.remove(at: indexPath.row)
             checklistArray.remove(at: indexOfItemToRemove!)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            saveChecklistItems()
+            saveChecklistItems()*/
         }
     }
     
     func filter(searchText : String) {
-        filteredArray = checklistArray.filter({( item : ChecklistItem) -> Bool in
+        filteredArray = DataModel.sharedInstance.checklist.filter({( item : ChecklistItem) -> Bool in
             return item.text!.lowercased().contains(searchText.lowercased())})
         
         tableView.reloadData()
@@ -210,20 +211,21 @@ class ChecklistViewController: UIViewController, UITableViewDataSource, UITableV
 }
 
 extension ChecklistViewController : itemDetailViewControllerDelegate{
+   
     
     func itemDetailViewControllerDidCancel(_ controller: ItemDetailViewController) {
         controller.dismiss(animated: true, completion: nil)
     }
     
-    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: ChecklistItem) {
+    func itemDetailViewController(_ controller: ItemDetailViewController, didFinishAddingItem item: String,_ list: Checklist) {
        controller.dismiss(animated: true, completion: nil)
-        addDummyTodo(item: item)
+        addDummyTodo(text: item)
     }
     
     func itemDetailViewController(_ controller:ItemDetailViewController,didFinishEditingItem item:ChecklistItem) {
         controller.dismiss(animated: true, completion: nil)
      
-            let index = checklistArray.index(where : {
+            let index = DataModel.sharedInstance.checklist.index(where : {
                 $0 === item
             })
             updateDummyTodo(item: item, index: index!)

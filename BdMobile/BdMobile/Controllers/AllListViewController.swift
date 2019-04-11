@@ -33,6 +33,7 @@ class AllListViewController: UITableViewController {
     override func awakeFromNib() {
         //loadChecklistItems()
         DataModel.sharedInstance.loadChecklist()
+        //print(DataModel.sharedInstance.lists[0].id)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -44,9 +45,35 @@ class AllListViewController: UITableViewController {
             let indexForSelectedItem = tableView.indexPath(for: cell!)
             //delegate.list = lists[indexForSelectedItem!.row]
             delegate.list = DataModel.sharedInstance.lists[indexForSelectedItem!.row]
+            delegate.posList = indexForSelectedItem!.row
+
+            break
+            
+        case .AddList:
+            // prepare for segue to Foo
+            let navigation = segue.destination as! UINavigationController
+            let controller = navigation.topViewController as! ListDetailViewController
+            controller.delegate = self
+            controller.listToEdit = nil
+            break
+        case .EditList:
+            let navigation = segue.destination as! UINavigationController
+            let controller = navigation.topViewController as! ListDetailViewController
+            controller.delegate = self
+            let cell = sender as? UITableViewCell
+            let indexForSelectedItem = tableView.indexPath(for: cell!)
+            //controller.listToEdit = lists[indexForSelectedItem!.row]
+            controller.listToEdit = DataModel.sharedInstance.lists[indexForSelectedItem!.row]
+            
             break
         
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.reloadData()
+        // DataModel.sharedInstance.sortChecklists()
+        
     }
     
     //datasource
@@ -66,13 +93,71 @@ class AllListViewController: UITableViewController {
         
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            //lists.remove(at: indexPath.row)
+            print("index", indexPath.row)
+            DataModel.sharedInstance.deleteList(id: DataModel.sharedInstance.lists[indexPath.row].id!)
+
+            DataModel.sharedInstance.lists.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            DataModel.sharedInstance.loadChecklist()
+            //saveChecklistItems()
+        }
+    }
+    
+    func addDummyTodo(item : String) {
+        //lists.append(item)
+        //DataModel.sharedInstance.lists.append(item)
+        DataModel.sharedInstance.insertNewList(name: item)
+        DataModel.sharedInstance.loadChecklist()
+        tableView.insertRows(at: [IndexPath(row: DataModel.sharedInstance.lists.count - 1, section: 0)], with:.automatic)
+        //saveChecklistItems()
+        
+    }
+    func updateDummyTodo(item : Checklist,index :Int) {
+        //lists[index].name = item.name
+        DataModel.sharedInstance.lists[index].name = item.name
+        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        //saveChecklistItems()
+    }
+    
     
 }
+
+extension AllListViewController : ListDetailViewControllerDelegate{
+    func ListDetailViewControllerDidCancel(_ controller: ListDetailViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func ListDetailViewController(_ controller: ListDetailViewController, didFinishAddingList item: String) {
+        controller.dismiss(animated: true, completion: nil)
+        addDummyTodo(item: item)
+    }
+    
+    func ListDetailViewController(_ controller: ListDetailViewController, didFinishEditingList item: Checklist) {
+        controller.dismiss(animated: true, completion: nil)
+        /*let index = lists.index(where : {
+         $0 === item
+         })*/
+        let index = DataModel.sharedInstance.lists.index(where : {
+            $0 === item
+        })
+        updateDummyTodo(item: item, index: index!)
+    }
+    
+    
+    
+    
+}
+
 
 extension AllListViewController: SegueHandlerType {
     
     enum SegueIdentifier: String {
         case seeList
+        case AddList
+        case EditList
         //case editItem
         
     }
